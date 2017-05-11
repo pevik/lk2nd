@@ -350,6 +350,7 @@ _dopr(
                 break;
             case 'E':
                 flags |= DP_F_UP;
+                /* fall thru */
             case 'e':
                 if (cflags == DP_C_LDOUBLE)
                     fvalue = va_arg(args, LDOUBLE);
@@ -358,6 +359,7 @@ _dopr(
                 break;
             case 'G':
                 flags |= DP_F_UP;
+                /* fall thru */
             case 'g':
                 if (cflags == DP_C_LDOUBLE)
                     fvalue = va_arg(args, LDOUBLE);
