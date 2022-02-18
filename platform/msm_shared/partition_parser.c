@@ -1102,7 +1102,7 @@ void partition_dump()
 {
 	unsigned i = 0;
 	for (i = 0; i < partition_count; i++) {
-		dprintf(SPEW,
+		dprintf(INFO,
 			"ptn[%d]:Name[%s] Size[%llu] Type[%u] First[%llu] Last[%llu]\n",
 			i, partition_entries[i].name, partition_entries[i].size,
 			partition_entries[i].dtype,
