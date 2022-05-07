@@ -21,6 +21,9 @@ endif
 FASTBOOT_HELP ?= 0
 DEFINES += FASTBOOT_HELP=$(FASTBOOT_HELP)
 
+FASTBOOT_TIMER ?= 0
+DEFINES += FASTBOOT_TIMER=$(FASTBOOT_TIMER)
+
 ifeq ($(ENABLE_UNITTEST_FW), 1)
 OBJS += \
 	$(LOCAL_DIR)/fastboot_test.o
@@ -37,4 +40,9 @@ OBJS += \
 	$(LOCAL_DIR)/mdtp_fuse.o \
 	$(LOCAL_DIR)/mdtp_defs.o \
 	$(LOCAL_DIR)/mdtp_fs.o
+endif
+
+ifeq ($(FASTBOOT_TIMER),1)
+OBJS += \
+	$(LOCAL_DIR)/fastboot_timer.o
 endif

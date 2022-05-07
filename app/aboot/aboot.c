@@ -95,6 +95,10 @@
 #include <display_menu.h>
 #include "fastboot_test.h"
 
+#if FASTBOOT_TIMER
+#include "fastboot_timer.h"
+#endif
+
 extern  bool target_use_signed_kernel(void);
 extern void platform_uninit(void);
 extern void target_uninit(void);
@@ -124,6 +128,9 @@ struct fastboot_cmd_desc {
 #define TARGET(NAME) EXPAND(NAME)
 
 #define DISPLAY_PANEL_HDMI "hdmi"
+#if FASTBOOT_TIMER
+#define FASTBOOT_TIMER_WAIT_MS 5000
+#endif
 
 #ifdef MEMBASE
 #define EMMC_BOOT_IMG_HEADER_ADDR (0xFF000+(MEMBASE))
@@ -5553,6 +5560,10 @@ void aboot_init(const struct app_descriptor *app)
 	}
 #endif
 
+#if FASTBOOT_TIMER
+	boot_into_fastboot = true;
+#endif
+
 normal_boot:
 	if (!boot_into_fastboot)
 	{
@@ -5626,7 +5637,9 @@ fastboot:
 	/* register aboot specific fastboot commands */
 	fastboot_register_commands();
 	aboot_fastboot_register_commands();
-
+#if FASTBOOT_TIMER
+	fastboot_timer_register_commands();
+#endif
 	/* dump partition table for debug info */
 	if (target_is_emmc_boot())
 		partition_dump();
@@ -5641,6 +5654,13 @@ fastboot:
 #endif
 #if FBCON_DISPLAY_MSG
 	display_fastboot_menu();
+#endif
+#if FASTBOOT_TIMER
+
+thread_sleep(FASTBOOT_TIMER_WAIT_MS);
+if (!fastboot_stay_requested()) {
+    cmd_continue(NULL, NULL, 0);
+}
 #endif
 }
 
