@@ -6,6 +6,8 @@ DEFINES += ASSERT_ON_TAMPER=1
 
 MODULES += lib/zlib_inflate
 
+MODULES += app/aboot/bootapp
+
 OBJS += \
 	$(LOCAL_DIR)/aboot.o \
 	$(LOCAL_DIR)/fastboot.o \

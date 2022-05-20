@@ -95,6 +95,8 @@
 #include <display_menu.h>
 #include "fastboot_test.h"
 
+#include "bootapp/boot.h"
+
 extern  bool target_use_signed_kernel(void);
 extern void platform_uninit(void);
 extern void target_uninit(void);
@@ -5491,6 +5493,9 @@ void aboot_init(const struct app_descriptor *app)
 		}
 	}
 #endif
+
+	boot_into_fastboot = true;
+	bootapp_init();
 
 normal_boot:
 	if (!boot_into_fastboot)
