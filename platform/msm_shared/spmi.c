@@ -360,7 +360,7 @@ int spmi_acc_irq(uint32_t periph_acc_irq, uint32_t status)
 		return 0;
 }
 
-void spmi_irq()
+static enum handler_return spmi_irq(void *arg)
 {
 	int i;
 	uint32_t status;
@@ -374,9 +374,11 @@ void spmi_irq()
 		if (status)
 			if (!spmi_acc_irq(i, status))
 				/* Not the correct interrupt, continue to wait */
-				return;
+				return -1;
 	}
 	mask_interrupt(EE0_KRAIT_HLOS_SPMI_PERIPH_IRQ);
+
+	return 0;
 }
 
 /* Enable interrupts on a particular peripheral: periph_id */
@@ -384,7 +386,7 @@ void spmi_enable_periph_interrupts(uint8_t periph_id)
 {
 	pmic_irq_perph_id = periph_id;
 
-	register_int_handler(EE0_KRAIT_HLOS_SPMI_PERIPH_IRQ ,(int_handler)spmi_irq, 0);
+	register_int_handler(EE0_KRAIT_HLOS_SPMI_PERIPH_IRQ, spmi_irq, 0);
 	unmask_interrupt(EE0_KRAIT_HLOS_SPMI_PERIPH_IRQ);
 
 }
