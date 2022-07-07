@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022, Petr Vorel <petr.vorel@gmail.com>
+ */
+
+/dts-v1/;
+
+#include <skeleton.dtsi>
+
+/ {
+	// This is used by the bootloader to find the correct DTB
+	qcom,msm-id = <207 0x20000>;
+	qcom,board-id = <8026 0>;
+
+	// The bootloader gets really sad if it cannot find those nodes
+	chosen { };
+
+	memory@0 {
+		device_type = "memory";
+		/* We expect the bootloader to fill in the reg */
+		reg = <0 0 0 0>;
+	};
+};
