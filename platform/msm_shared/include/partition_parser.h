@@ -132,10 +132,13 @@
             ((uint32_t)*(x+2) << 16) | \
             ((uint32_t)*(x+3) << 24))
 
-#define PUT_LONG(x, y)   *(x) = y & 0xff;     \
-    *(x+1) = (y >> 8) & 0xff;     \
-    *(x+2) = (y >> 16) & 0xff;    \
-    *(x+3) = (y >> 24) & 0xff;
+#define PUT_LONG(x, y)   \
+    { \
+        *(x) = y & 0xff;     \
+        *(x+1) = (y >> 8) & 0xff;     \
+        *(x+2) = (y >> 16) & 0xff;    \
+        *(x+3) = (y >> 24) & 0xff;    \
+    }
 
 #define PUT_LONG_LONG(x,y)    *(x) =(y) & 0xff; \
      *((x)+1) = (((y) >> 8) & 0xff);    \
