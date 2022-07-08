@@ -187,12 +187,19 @@ void RC4(RC4_KEY *key, size_t len, const unsigned char *indata,
 				switch (len&(sizeof(RC4_CHUNK)-1))
 					{
 					case 7:	otp  = RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 6:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 5:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 4:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 3:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 2:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 1:	otp |= RC4_STEP<<i, i-=8;
+					/* fall thru */
 					case 0: ; /*
 						   * it's never the case,
 						   * but it has to be here
@@ -240,12 +247,19 @@ void RC4(RC4_KEY *key, size_t len, const unsigned char *indata,
 				switch (len&(sizeof(RC4_CHUNK)-1))
 					{
 					case 7:	otp  = RC4_STEP,    i+=8;
+					/* fall thru */
 					case 6:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 5:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 4:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 3:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 2:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 1:	otp |= RC4_STEP<<i, i+=8;
+					/* fall thru */
 					case 0: ; /*
 						   * it's never the case,
 						   * but it has to be here

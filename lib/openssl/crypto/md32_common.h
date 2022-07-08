@@ -222,18 +222,18 @@
 #endif
 
 #ifndef HOST_c2l
-#define HOST_c2l(c,l)	(l =(((unsigned long)(*((c)++)))<<24),		\
-			 l|=(((unsigned long)(*((c)++)))<<16),		\
-			 l|=(((unsigned long)(*((c)++)))<< 8),		\
-			 l|=(((unsigned long)(*((c)++)))    ),		\
-			 l)
+#define HOST_c2l(c,l)	({ l =(((unsigned long)(*((c)++)))<<24);		\
+			 l|=(((unsigned long)(*((c)++)))<<16);		\
+			 l|=(((unsigned long)(*((c)++)))<< 8);		\
+			 l|=(((unsigned long)(*((c)++)))    );		\
+			 l; })
 #endif
 #ifndef HOST_l2c
-#define HOST_l2c(l,c)	(*((c)++)=(unsigned char)(((l)>>24)&0xff),	\
-			 *((c)++)=(unsigned char)(((l)>>16)&0xff),	\
-			 *((c)++)=(unsigned char)(((l)>> 8)&0xff),	\
-			 *((c)++)=(unsigned char)(((l)    )&0xff),	\
-			 l)
+#define HOST_l2c(l,c)	({ *((c)++)=(unsigned char)(((l)>>24)&0xff);	\
+			 *((c)++)=(unsigned char)(((l)>>16)&0xff);	\
+			 *((c)++)=(unsigned char)(((l)>> 8)&0xff);	\
+			 *((c)++)=(unsigned char)(((l)    )&0xff);	\
+			 l; })
 #endif
 
 #elif defined(DATA_ORDER_IS_LITTLE_ENDIAN)
@@ -259,18 +259,18 @@
 #endif
 
 #ifndef HOST_c2l
-#define HOST_c2l(c,l)	(l =(((unsigned long)(*((c)++)))    ),		\
-			 l|=(((unsigned long)(*((c)++)))<< 8),		\
-			 l|=(((unsigned long)(*((c)++)))<<16),		\
-			 l|=(((unsigned long)(*((c)++)))<<24),		\
-			 l)
+#define HOST_c2l(c,l)	({ l =(((unsigned long)(*((c)++)))    );		\
+			 l|=(((unsigned long)(*((c)++)))<< 8);		\
+			 l|=(((unsigned long)(*((c)++)))<<16);		\
+			 l|=(((unsigned long)(*((c)++)))<<24);		\
+			 l; })
 #endif
 #ifndef HOST_l2c
-#define HOST_l2c(l,c)	(*((c)++)=(unsigned char)(((l)    )&0xff),	\
-			 *((c)++)=(unsigned char)(((l)>> 8)&0xff),	\
-			 *((c)++)=(unsigned char)(((l)>>16)&0xff),	\
-			 *((c)++)=(unsigned char)(((l)>>24)&0xff),	\
-			 l)
+#define HOST_l2c(l,c)	({ *((c)++)=(unsigned char)(((l)    )&0xff);	\
+			 *((c)++)=(unsigned char)(((l)>> 8)&0xff);	\
+			 *((c)++)=(unsigned char)(((l)>>16)&0xff);	\
+			 *((c)++)=(unsigned char)(((l)>>24)&0xff);	\
+			 l; })
 #endif
 
 #endif

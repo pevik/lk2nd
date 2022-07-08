@@ -362,8 +362,11 @@ static BN_ULONG *bn_expand_internal(const BIGNUM *b, int words)
 		switch (b->top&3)
 			{
 		case 3:	A[2]=B[2];
+		break;
 		case 2:	A[1]=B[1];
+		break;
 		case 1:	A[0]=B[0];
+		break;
 		case 0: /* workaround for ultrix cc: without 'case 0', the optimizer does
 		         * the switch table by doing a=top&3; a--; goto jump_table[a];
 		         * which fails for top== 0 */
@@ -517,8 +520,11 @@ BIGNUM *BN_copy(BIGNUM *a, const BIGNUM *b)
 	switch (b->top&3)
 		{
 		case 3: A[2]=B[2];
+		/* fall thru */
 		case 2: A[1]=B[1];
+		/* fall thru */
 		case 1: A[0]=B[0];
+		/* fall thru */
 		case 0: ; /* ultrix cc workaround, see comments in bn_expand_internal */
 		}
 #else
