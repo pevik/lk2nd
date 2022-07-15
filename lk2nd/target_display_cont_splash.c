@@ -219,7 +219,7 @@ static int mdp_cmd_refresh_loop(void *data)
 		/* Limit refresh to 50 Hz to avoid overlapping display updates */
 		event_wait(&refresh_event);
 		mdp_refresh(fb);
-		thread_sleep(20);
+		thread_sleep(32);
 	}
 	return 0;
 }
