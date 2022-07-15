@@ -190,6 +190,12 @@ static bool mdp_read_config(struct fbcon_config *fb)
 	fb->stride = stride / bpp;
 	fb->bpp = bpp * 8;
 
+	/* DIRTY: Change fb format (slightly incorrect) and stride for Nexus5XPkg */
+	writel(0x000237FF, pipe->base + PIPE_SSPP_SRC_FORMAT);
+	writel(0x00020001, pipe->base + PIPE_SSPP_SRC_UNPACK_PATTERN);
+	writel(1080*4, pipe->base + PIPE_SSPP_SRC_YSTRIDE);//4
+	writel(BIT(3), MDP_CTL_0_BASE + CTL_FLUSH);
+
 	/* Assume the color order is correct, LK does not support others... */
 	if (bpp == 2)
 		fb->format = FB_FORMAT_RGB565;
