@@ -1,5 +1,5 @@
-rm  out/*
-rm build-lk2nd-msm8994/*
+rm -r out/*
+rm -r build-lk2nd-msm8994/*
 
 make lk2nd-msm8994
 
