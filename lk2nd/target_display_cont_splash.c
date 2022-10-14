@@ -197,48 +197,12 @@ static bool mdp_read_config(struct fbcon_config *fb)
 		fb->format = FB_FORMAT_RGB888;
 
 	if (cmd_mode && !auto_refresh)
-		mdp_cmd_start_refresh(fb);
+		//start refresh
+		writel((BIT(31) | 1), MDP_PP_0_BASE + MDSS_MDP_REG_PP_AUTOREFRESH_CONFIG);
 
 	return true;
 }
 #endif /* MDP5 */
-
-static event_t refresh_event;
-
-static int mdp_cmd_refresh_loop(void *data)
-{
-	struct fbcon_config *fb = data;
-
-	while (true) {
-		/* Limit refresh to 50 Hz to avoid overlapping display updates */
-		event_wait(&refresh_event);
-		mdp_refresh(fb);
-		thread_sleep(32);
-	}
-	return 0;
-}
-
-static void mdp_cmd_signal_refresh(void)
-{
-	event_signal(&refresh_event, false);
-}
-
-static void mdp_cmd_start_refresh(struct fbcon_config *fb)
-{
-	thread_t *thr;
-
-	event_init(&refresh_event, false, EVENT_FLAG_AUTOUNSIGNAL);
-
-	thr = thread_create("display-refresh", &mdp_cmd_refresh_loop,
-			    fb, HIGH_PRIORITY, DEFAULT_STACK_SIZE);
-	if (!thr) {
-		dprintf(CRITICAL, "Failed to create display-refresh thread\n");
-		return;
-	}
-
-	thread_resume(thr);
-	fb->update_start = mdp_cmd_signal_refresh;
-}
 
 static bool mdp_check_config(struct fbcon_config *fb)
 {
