@@ -135,11 +135,6 @@ static const struct mdp5_pipe mdp5_pipes[] = {
 	},
 };
 
-static void mdp_refresh(struct fbcon_config *fb)
-{
-	writel(1, MDP_CTL_0_BASE + CTL_START);
-}
-
 static const struct mdp5_pipe *mdp5_find_pipe(struct fbcon_config *fb)
 {
 	const struct mdp5_pipe *pipe = mdp5_pipes;
