@@ -44,10 +44,29 @@ static inline uint32_t read_mpidr(void)
 	return BITS(res, 23, 0);
 }
 
-static uint32_t read_phandle_reg(const void *dtb, int node, const char *prop)
+static uint32_t read_phandle_value_indexed(const void *dtb, int node, 
+		const char *name, int index)
 {
 	const fdt32_t *val;
-	int target, len;
+	int len;
+
+	val = fdt_getprop(dtb, node, name, &len);
+	if (len < (int)sizeof(*val)) {
+		dprintf(CRITICAL, "Cannot read %s property of node: %d\n",
+			name, len);
+		return 0;
+	}
+	return fdt32_to_cpu(*(val + index));
+}
+
+static uint32_t read_phandle_reg_indexed(const void *dtb, int node,
+		const char *prop, int index)
+{
+	/* 
+	 * used_index is index multiplied by 2 because we want to use the first
+	 * value from the second tuple, not the second value from the first tuple
+	 */
+	int target, used_index = index * 2;
 
 	target = lkfdt_lookup_phandle(dtb, node, prop);
 	if (target < 0) {
@@ -55,14 +74,17 @@ static uint32_t read_phandle_reg(const void *dtb, int node, const char *prop)
 			prop, fdt_get_name(dtb, node, NULL), target);
 		return 0;
 	}
+	return read_phandle_value_indexed(dtb, target, "reg", used_index);
+}
 
-	val = fdt_getprop(dtb, target, "reg", &len);
-	if (len < (int)sizeof(*val)) {
-		dprintf(CRITICAL, "Cannot read reg property of %s node: %d\n",
-			prop, len);
-		return 0;
-	}
-	return fdt32_to_cpu(*val);
+static uint32_t read_phandle_value(const void *dtb, int node, const char *name)
+{
+	return read_phandle_value_indexed(dtb, node, name, 0);
+}
+
+static uint32_t read_phandle_reg(const void *dtb, int node, const char *prop)
+{
+	return read_phandle_reg_indexed(dtb, node, prop, 0);
 }
 
 bool cpu_boot(const void *dtb, int node, uint32_t mpidr)
