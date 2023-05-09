@@ -44,6 +44,30 @@ static inline uint32_t read_mpidr(void)
 	return BITS(res, 23, 0);
 }
 
+/**
+ * @brief This function used to read value by index of specified property
+ * 
+ * Example of node:
+ * @code
+ *	somenode {
+ *		someproperty = <1 2 3 4>;
+ *	};
+ * @endcode
+ * 
+ * So, to get second value(2) of this `someproperty` call this function
+ * like this:
+ * 
+ * @code
+ * val = read_phandle_value_indexed(dtb, node, "someproperty", 1)
+ * @endcode
+ * 
+ * @param dtb The pointer to dtb
+ * @param node phandle of node, where to search property
+ * @param name property name
+ * @param index if property value is tuple, index specifies which value
+ * 		  of tuple to return
+ * @return value of specified property by index or 0 if not possible
+ */
 static uint32_t read_phandle_value_indexed(const void *dtb, int node, 
 		const char *name, int index)
 {
@@ -59,6 +83,44 @@ static uint32_t read_phandle_value_indexed(const void *dtb, int node,
 	return fdt32_to_cpu(*(val + index));
 }
 
+/**
+ * @brief This function return reg value by index of specified node
+ * @param dtb The pointer to dtb
+ * @param node phandle of node, where to search target node
+ * @param name target node name
+ * @param index index of which reg tuple value to return
+ * 
+ * Example of node:
+ * @code
+ *	l2ccc_0: clock-controller@f900d000 {
+ *		compatible = "qcom,8994-l2ccc";
+ *		reg = <0xf900d000 0x1000>;
+ *		qcom,vctl-node = <&cluster0_spm>;
+ *	};
+ *	
+ *	cluster0_spm: qcom,spm@f9012000 {
+ *			compatible = "qcom,spm-v2";
+ *			#address-cells = <1>;
+ *			#size-cells = <1>;
+ *			reg = <0xf9012000 0x1000>,
+ *				<0xf900d210 0x8>;
+ *	};
+ * @endcode
+ * 
+ * So, to get second reg address of `cluster0_spm`(0xf900d210), call function
+ * like this:
+ * 
+ * @code
+ * val = read_phandle_reg_indexed(dtb, node, "qcom,vctl-node", 1)
+ * @endcode
+ * 
+ * where `node` is on `l2ccc_0` now
+ * 
+ * @note index specifies what tuple to use, not value
+ * @note `node` must contain node with subnode called `name`
+ * 
+ * @return value of specified node reg by index or 0 if not possible
+ */
 static uint32_t read_phandle_reg_indexed(const void *dtb, int node,
 		const char *prop, int index)
 {
@@ -77,11 +139,19 @@ static uint32_t read_phandle_reg_indexed(const void *dtb, int node,
 	return read_phandle_value_indexed(dtb, target, "reg", used_index);
 }
 
+/**
+ * @brief The same as `read_phandle_value_indexed` but with default index 0
+ * @see read_phandle_value_indexed
+ */
 static uint32_t read_phandle_value(const void *dtb, int node, const char *name)
 {
 	return read_phandle_value_indexed(dtb, node, name, 0);
 }
 
+/**
+ * @brief The same as `read_phandle_reg_indexed` but with default index 0
+ * @see read_phandle_reg_indexed
+ */
 static uint32_t read_phandle_reg(const void *dtb, int node, const char *prop)
 {
 	return read_phandle_reg_indexed(dtb, node, prop, 0);
