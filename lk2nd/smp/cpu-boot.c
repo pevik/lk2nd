@@ -157,6 +157,23 @@ static uint32_t read_phandle_reg(const void *dtb, int node, const char *prop)
 	return read_phandle_reg_indexed(dtb, node, prop, 0);
 }
 
+#if CPU_BOOT_CORTEX_A_MSM8994
+bool boot_msm8994_cpu(const void *dtb, int acc, int node) {
+	node = lkfdt_lookup_phandle(dtb, node, "next-level-cache");
+	if (node < 0) {
+		dprintf(CRITICAL, "Cannot find CPU next-level-cache: %d\n", node);
+		return false;
+	}
+	uint32_t l2ccc_base = read_phandle_reg(dtb, node, "power-domain");
+	node = lkfdt_lookup_phandle(dtb, node, "power-domain");
+	uint32_t vctl_base_0 = read_phandle_reg_indexed(dtb, node, "qcom,vctl-node", 0);
+	uint32_t vctl_base_1 = read_phandle_reg_indexed(dtb, node, "qcom,vctl-node", 1);
+	uint32_t vctl_val = read_phandle_value(dtb, node, "qcom,vctl-val");
+	cpu_boot_cortex_a_msm8994(acc, l2ccc_base, vctl_base_0, vctl_base_1, vctl_val);
+	return true;
+}
+#endif
+
 bool cpu_boot(const void *dtb, int node, uint32_t mpidr)
 {
 	uint32_t acc, extra_reg __UNUSED;
@@ -182,6 +199,9 @@ bool cpu_boot(const void *dtb, int node, uint32_t mpidr)
 	 */
 	extra_reg = read_phandle_reg(dtb, node, "clocks");
 	cpu_boot_cortex_a(acc, extra_reg);
+#elif CPU_BOOT_CORTEX_A_MSM8994
+	if(!boot_msm8994_cpu(dtb, acc, node))
+		return false;
 #elif CPU_BOOT_KPSSV1
 	extra_reg = read_phandle_reg(dtb, node, "qcom,saw");
 	if (!extra_reg)
