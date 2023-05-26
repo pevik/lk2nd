@@ -4,16 +4,13 @@
 #include <lk2nd.dtsi>
 
 / {
-	qcom,msm-id = <QCOM_ID_MSM8994 0>, <252 0>;
-	qcom,board-id = <12 0>;
+	model = "Huawei Nexus 6P";
+	qcom,msm-id = <QCOM_ID_MSM8994 0>;
+	qcom,pmic-id = <0x10009 0x1000A 0 0>;
+	qcom,board-id = <8026 0>;
 };
 
 &lk2nd {
-	libra {
-		model = "Xiaomi Mi 4C";
-		compatible = "xiaomi,libra";
-
-		qcom,board-id = <12 0>;
-		qcom,pmic-id = <65545 65546 0 0>;
-	};
+	model = "Huawei Nexus 6P";
+	compatible = "huawei,angler";
 };
